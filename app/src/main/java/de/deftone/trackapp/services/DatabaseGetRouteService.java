@@ -15,22 +15,29 @@ import de.deftone.trackapp.model.MyLocation;
 
 import static de.deftone.trackapp.settings.Constants.FORMATTER;
 
-public class DatabaseInfoService extends AsyncTask {
+public class DatabaseGetRouteService extends AsyncTask {
 
     private Context context;
     private TextView textView;
 
-    public DatabaseInfoService(Context context, TextView textView) {
+    public DatabaseGetRouteService(Context context, TextView textView) {
         this.context = context;
         this.textView = textView;
     }
 
     @Override
     protected Object doInBackground(Object[] objects) {
-        return MyLocationDB
-                .getInstance(context)
-                .getLocationRepo()
-                .getAllLocations();
+        if (objects.length == 0) {
+            return MyLocationDB
+                    .getInstance(context)
+                    .getLocationRepo()
+                    .getAllLocations();
+        } else {
+            return MyLocationDB
+                    .getInstance(context)
+                    .getLocationRepo()
+                    .getAllLocations((int) objects[0]);
+        }
     }
 
     @Override

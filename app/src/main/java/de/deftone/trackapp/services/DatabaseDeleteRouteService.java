@@ -15,11 +15,11 @@ import de.deftone.trackapp.model.MyLocation;
 
 import static de.deftone.trackapp.settings.Constants.FORMATTER;
 
-public class DatabaseDeletingService extends AsyncTask {
+public class DatabaseDeleteRouteService extends AsyncTask {
 
     private Context context;
 
-    public DatabaseDeletingService(Context context) {
+    public DatabaseDeleteRouteService(Context context) {
         this.context = context;
     }
 

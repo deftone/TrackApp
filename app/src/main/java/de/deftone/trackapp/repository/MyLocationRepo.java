@@ -17,8 +17,8 @@ public interface MyLocationRepo {
     @Query("SELECT * FROM mylocation")
     List<MyLocation> getAllLocations();
 
-//    @Query("SELECT * FROM mylocation WHERE trackId:=trackId")
-//    List<MyLocation> getAllLocations(int trackId);
+    @Query("SELECT * FROM mylocation WHERE trackId=:id")
+    List<MyLocation> getAllLocations(int id );
 
     @Insert
     void insert(MyLocation myLocation);

@@ -66,9 +66,10 @@ public class LocationMonitoringService extends Service implements
 
         mLocationClient.connect();
 
-        //make it a forground service so it will update the location even when app in background
-        Notification notification = new Notification();
-        startForeground(NOTIFICATION, notification);
+        //todo: einkommentieren wenn nicht alleine unterwegs
+//        //make it a forground service so it will update the location even when app in background
+//        Notification notification = new Notification();
+//        startForeground(NOTIFICATION, notification);
         //Make it stick to the notification panel so it is less prone to get cancelled by the Operating System.
         return START_STICKY;
     }
@@ -94,8 +95,8 @@ public class LocationMonitoringService extends Service implements
                     if (locationList.size() > 0) {
 
                         //The last location in the list is the newest
-                        Location location = locationList.get(locationList.size() - 1);  //todo revert
-                        MyLocation myLocation = new MyLocation(System.currentTimeMillis(), 3,//getTrackId(),
+                        Location location = locationList.get(locationList.size() - 1);
+                        MyLocation myLocation = new MyLocation(System.currentTimeMillis(), getTrackId(),
                                 location.getLatitude(), location.getLongitude(),
                                 location.getSpeed(), location.getAltitude());
                         //Send result to activities

@@ -27,9 +27,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.deftone.trackapp.model.MyLocation;
-import de.deftone.trackapp.services.DatabaseDeletingService;
-import de.deftone.trackapp.services.DatabaseInfoService;
-import de.deftone.trackapp.services.DatabasePersistenceService;
+import de.deftone.trackapp.services.DatabaseDeleteRouteService;
+import de.deftone.trackapp.services.DatabaseGetRouteService;
+import de.deftone.trackapp.services.DatabaseSaveRouteService;
 import de.deftone.trackapp.services.LocationMonitoringService;
 import de.deftone.trackapp.utils.CheckLocationServiceRequirements;
 
@@ -164,35 +164,32 @@ public class MapsActivity extends AppCompatActivity {
     void startTracking() {
         trackingActive = true;
         //get and set track id
-//        setTrackId(getTrackId() + 1);
-        setTrackId(3);
+        setTrackId(getTrackId() + 1);
         //reset location list
         allLocations.clear();
         //update layout
         messageTextView.setText(R.string.msg_location_service_started);
         updateLayout(View.GONE, View.VISIBLE);
-//        //keep tracking even if app is in background todo: das bringt die app zum absturz
-        //https://developer.android.com/reference/android/app/Service#stopForeground(boolean)
-        //https://developer.android.com/guide/components/services#Foreground
-//        startForegroundService(locationServiceIntent);
     }
 
     @OnClick(R.id.button_save)
     void saveRoute() {
         trackingActive = false;
         //add location to database
-        DatabasePersistenceService databaseService = new DatabasePersistenceService(this);
-        databaseService.execute(allLocations);
+        DatabaseSaveRouteService databaseSaveRouteService = new DatabaseSaveRouteService(this);
+        databaseSaveRouteService.execute(allLocations);
         //update layout
         updateLayout(View.VISIBLE, View.GONE);
         messageTextView.setText(R.string.route_saved);
-        //todo stoo foreground service
     }
 
     @OnClick(R.id.button_show)
     void showAllRoutes() {
-        DatabaseInfoService databaseInfoService = new DatabaseInfoService(this, messageTextView);
-        databaseInfoService.execute();
+        DatabaseGetRouteService databaseGetRouteService = new DatabaseGetRouteService(this, messageTextView);
+//        //todo: auswaehlbar machen!
+//        int trackId = 7;
+//        databaseGetRouteService.execute(trackId);
+        databaseGetRouteService.execute();
     }
 
     //todo katrin!
@@ -204,9 +201,9 @@ public class MapsActivity extends AppCompatActivity {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
-                        DatabaseDeletingService databaseDeletingService = new DatabaseDeletingService(context);
+                        DatabaseDeleteRouteService databaseDeleteRouteService = new DatabaseDeleteRouteService(context);
                         //todo: hier muss natuerlich eine List mit MyLocations uebergeben werden! sonst geht das nicth!!
-                        databaseDeletingService.execute();
+                        databaseDeleteRouteService.execute();
                         messageTextView.setText("");
                     }
                 })

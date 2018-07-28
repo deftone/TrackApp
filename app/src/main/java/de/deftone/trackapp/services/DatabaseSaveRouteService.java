@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import de.deftone.trackapp.database.MyLocationDB;
 import de.deftone.trackapp.model.MyLocation;
 
-public class DatabasePersistenceService extends AsyncTask {
+public class DatabaseSaveRouteService extends AsyncTask {
 
     private Context context;
 
-    public DatabasePersistenceService(Context context) {
+    public DatabaseSaveRouteService(Context context) {
         this.context = context;
     }
 
