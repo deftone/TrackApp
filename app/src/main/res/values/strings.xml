@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">TrackApp</string>
+    <string name="title_activity_maps">Tracker</string>
+    <string name="permission_rationale">Please grant location permission to start the service</string>
+    <string name="permission_denied_explanation">You have not granted location permission. So the service cannot be started.</string>
+    <string name="no_google_playservice_available">No Google Playservice found. Please install it.</string>
+    <string name="msg_location_service_not_started">Location Tracking Not Started</string>
+    <string name="msg_location_service_started">Location Tracking Started</string>
+    <string name="activate_gps">Make sure GPS is activated!</string>
+    <string name="show_all_routes">Show all routes</string>
+    <string name="delete_all_routes">Delete all routes</string>
+    <string name="start_tracking_new_route">Start tracking new route</string>
+    <string name="save_new_route">Save new route</string>
+    <string name="delete_title">Delete all Routes?</string>
+    <string name="delete_message">Do you really want to delete all routes? Can\'t be reversed!</string>
+    <string name="route_saved">Route saved</string>
+
+</resources>
