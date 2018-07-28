@@ -40,7 +40,7 @@ import static de.deftone.trackapp.settings.Constants.REQUEST_PERMISSIONS_REQUEST
 import static de.deftone.trackapp.settings.Constants.SHARED_PREF_TRACK_ID;
 import static de.deftone.trackapp.settings.Constants.SHARED_PREF_TRACK_ID_KEY;
 
-public class MapsActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     private boolean locatingServiceStarted = false;
     private boolean trackingActive = false;

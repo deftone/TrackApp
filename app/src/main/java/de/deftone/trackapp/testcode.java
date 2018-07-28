@@ -49,7 +49,7 @@
 //     * This code is returned in Activity.onActivityResult
 //     */
 //    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-//    public static final String TAG = MapsActivity.class.getSimpleName();
+//    public static final String TAG = MainActivity.class.getSimpleName();
 //
 //    private GoogleMap mMap;
 //    private GoogleApiClient mGoogleApiClient;
@@ -138,7 +138,7 @@
 //            if (locationList.size() > 0) {
 //                //The last location in the list is the newest
 //                Location location = locationList.get(locationList.size() - 1);
-//                Log.i("MapsActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
+//                Log.i("MainActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
 //                mLastLocation = location;
 //                if (mCurrLocationMarker != null) {
 //                    mCurrLocationMarker.remove();
@@ -178,7 +178,7 @@
 ////                            @Override
 ////                            public void onClick(DialogInterface dialogInterface, int i) {
 ////                                //Prompt the user once explanation has been shown
-////                                ActivityCompat.requestPermissions(MapsActivity.this,
+////                                ActivityCompat.requestPermissions(MainActivity.this,
 ////                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
 ////                                        MY_PERMISSIONS_REQUEST_LOCATION);
 ////                            }
