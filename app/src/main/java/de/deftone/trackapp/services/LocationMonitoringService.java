@@ -24,13 +24,15 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.deftone.trackapp.model.MyLocation;
 
 import static de.deftone.trackapp.settings.Constants.ACTION_LOCATION_BROADCAST;
 import static de.deftone.trackapp.settings.Constants.EXTRA_LOCATION;
-import static de.deftone.trackapp.settings.Constants.LOCATION_DISTANCE_INTERVAL;
+import static de.deftone.trackapp.settings.Constants.FASTEST_LOCATION_INTERVAL;
+import static de.deftone.trackapp.settings.Constants.LOCATION_INTERVAL;
 import static de.deftone.trackapp.settings.Constants.NOTIFICATION;
 import static de.deftone.trackapp.settings.Constants.SHARED_PREF_TRACK_ID;
 import static de.deftone.trackapp.settings.Constants.SHARED_PREF_TRACK_ID_KEY;
@@ -49,12 +51,12 @@ public class LocationMonitoringService extends Service implements
                 .addApi(LocationServices.API)
                 .build();
 
-//        //use time diff for location update
-//        mLocationRequest.setInterval(Constants.LOCATION_INTERVAL);
-//        mLocationRequest.setFastestInterval(Constants.FASTEST_LOCATION_INTERVAL);
+        //use time diff for location update
+        mLocationRequest.setInterval(LOCATION_INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_LOCATION_INTERVAL);
 
-        //use distance diff for location update
-        mLocationRequest.setSmallestDisplacement(LOCATION_DISTANCE_INTERVAL);
+//        //use distance diff for location update
+//        mLocationRequest.setSmallestDisplacement(LOCATION_DISTANCE_INTERVAL);
 
         int priority = LocationRequest.PRIORITY_HIGH_ACCURACY; //by default
         //PRIORITY_BALANCED_POWER_ACCURACY, PRIORITY_LOW_POWER, PRIORITY_NO_POWER are the other priority modes
@@ -85,18 +87,30 @@ public class LocationMonitoringService extends Service implements
 
             FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
+            final List<Location> locationList = new ArrayList<>();
+
             LocationCallback mLocationCallback = new LocationCallback() {
                 @Override
                 public void onLocationResult(LocationResult locationResult) {
-                    List<Location> locationList = locationResult.getLocations();
-                    if (locationList.size() > 0) {
 
-                        //The last location in the list is the newest
-                        Location location = locationList.get(locationList.size() - 1);
+                    Location newLocation = locationResult.getLastLocation();
+                    if (newLocation != null) {
+                        locationList.add(newLocation);
+
+                        float distance = (locationList.size() > 1) ?
+                                newLocation.distanceTo(locationList.get(locationList.size() - 2))
+                                : 0;
+
                         MyLocation myLocation = new MyLocation(System.currentTimeMillis(), getTrackId(),
-                                location.getLatitude(), location.getLongitude(),
-                                location.getSpeed(), location.getAltitude());
+                                newLocation.getLatitude(), newLocation.getLongitude(),
+                                newLocation.getAltitude(), newLocation.getSpeed(),
+                                newLocation.getAccuracy(), newLocation.getVerticalAccuracyMeters(),
+                                newLocation.getSpeedAccuracyMetersPerSecond(),
+                                distance);
+
+
                         //Send result to activities
+                        //hier kann auch die liste uebergeben werden...
                         sendMessageToUI(myLocation);
                     }
                 }
@@ -123,7 +137,7 @@ public class LocationMonitoringService extends Service implements
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 
-    private int getTrackId(){
+    private int getTrackId() {
         SharedPreferences sharedPref = getSharedPreferences(SHARED_PREF_TRACK_ID, MODE_PRIVATE);
         return sharedPref.getInt(SHARED_PREF_TRACK_ID_KEY, 0);
     }

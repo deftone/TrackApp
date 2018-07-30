@@ -129,11 +129,17 @@ public class MainActivity extends AppCompatActivity {
             LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(location.getTimestamp()),
                     TimeZone.getDefault().toZoneId());
             locationString.append(location.getTrackId()).append(", ")
-                    .append(dateTime.format(FORMATTER)).append(", ")
-                    .append(location.getLatitude()).append(", ")
-                    .append(location.getLongitude()).append(", ")
-                    .append(location.getSpeed()).append(", ")
-                    .append(location.getAltitude()).append(System.lineSeparator());
+                    .append(dateTime.format(FORMATTER))
+                    .append("Altitude: ")
+                    .append(location.getAltitude()).append("m, +/- ")
+                    .append(location.getVerticalAccuracy()).append("m").append(System.lineSeparator())
+                    .append("Speed: ")
+                    .append(location.getSpeed_km_h()).append("km/h, +/- ")
+                    .append(location.getSpeedAccuracy_km_h()).append("km/h").append(System.lineSeparator())
+                    .append("Distance: ")
+                    .append(location.getDistance()).append("m, ")
+                    .append("Accuracy: ").append(location.getAccuracy()).append("")
+                    .append(System.lineSeparator()).append(System.lineSeparator());
         }
         messageTextView.setText(locationString.toString());
     }
@@ -183,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
     void showAllRoutes() {
         DatabaseGetRouteService databaseGetRouteService = new DatabaseGetRouteService(this);
 //        //todo: auswaehlbar machen!
-        int trackId = 14;
+        int trackId = 2;
         databaseGetRouteService.execute(trackId);
 //        databaseGetRouteService.execute();
     }
