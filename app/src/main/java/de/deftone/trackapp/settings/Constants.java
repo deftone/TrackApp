@@ -7,14 +7,16 @@ import de.deftone.trackapp.services.LocationMonitoringService;
 public interface Constants {
 
     //set the interval in which you want to get locations
-    public static final int LOCATION_INTERVAL = 2000;// 2sec 120000;  //every two minutes
+    public static final int LOCATION_INTERVAL = 120000;  //every two minutes
     //if a location is available sooner you can get it (i.e. another app is using the location services).
-    public static final int FASTEST_LOCATION_INTERVAL = 1000; //1sec 60000;  //every minute
+    public static final int FASTEST_LOCATION_INTERVAL = 60000;  //every minute
     //how many meters diference to get a new location
     public static final float LOCATION_DISTANCE_INTERVAL = 10.0f; // every 10 meters
 
     public static final String ACTION_LOCATION_BROADCAST = LocationMonitoringService.class.getName() + "LocationBroadcast";
     public static final String EXTRA_LOCATION = "extra_location";
+    public static final String EXTRA_LOCATION_LIST = "extra_location_list";
+
 
     public static final int PERMISSIONS_REQUEST_LOCATION = 99;
     /**
@@ -26,5 +28,8 @@ public interface Constants {
 
     public static final String SHARED_PREF_TRACK_ID = "shared_pref_file_for_track_id";
     public static final String SHARED_PREF_TRACK_ID_KEY = "shared_pref_file_for_track_id_key";
+
+    // Notification Unique id to identify created Notification from //service
+    public static final int NOTIFICATION = 1001;
 
 }

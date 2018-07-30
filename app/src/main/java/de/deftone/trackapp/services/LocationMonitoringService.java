@@ -3,7 +3,6 @@ package de.deftone.trackapp.services;
 import android.Manifest;
 import android.app.Notification;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -15,7 +14,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -29,11 +27,11 @@ import com.google.android.gms.location.LocationServices;
 import java.util.List;
 
 import de.deftone.trackapp.model.MyLocation;
-import de.deftone.trackapp.settings.Constants;
 
 import static de.deftone.trackapp.settings.Constants.ACTION_LOCATION_BROADCAST;
 import static de.deftone.trackapp.settings.Constants.EXTRA_LOCATION;
 import static de.deftone.trackapp.settings.Constants.LOCATION_DISTANCE_INTERVAL;
+import static de.deftone.trackapp.settings.Constants.NOTIFICATION;
 import static de.deftone.trackapp.settings.Constants.SHARED_PREF_TRACK_ID;
 import static de.deftone.trackapp.settings.Constants.SHARED_PREF_TRACK_ID_KEY;
 
@@ -42,8 +40,6 @@ public class LocationMonitoringService extends Service implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private LocationRequest mLocationRequest = new LocationRequest();
-    // Notification Unique id to identify created Notification from //service
-    private static final int NOTIFICATION = 1001;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -53,12 +49,12 @@ public class LocationMonitoringService extends Service implements
                 .addApi(LocationServices.API)
                 .build();
 
-        //use time diff for location update
-        mLocationRequest.setInterval(Constants.LOCATION_INTERVAL);
-        mLocationRequest.setFastestInterval(Constants.FASTEST_LOCATION_INTERVAL);
-//        //todo: test this!!
-//        //use distance diff for location update
-//        mLocationRequest.setSmallestDisplacement(LOCATION_DISTANCE_INTERVAL);
+//        //use time diff for location update
+//        mLocationRequest.setInterval(Constants.LOCATION_INTERVAL);
+//        mLocationRequest.setFastestInterval(Constants.FASTEST_LOCATION_INTERVAL);
+
+        //use distance diff for location update
+        mLocationRequest.setSmallestDisplacement(LOCATION_DISTANCE_INTERVAL);
 
         int priority = LocationRequest.PRIORITY_HIGH_ACCURACY; //by default
         //PRIORITY_BALANCED_POWER_ACCURACY, PRIORITY_LOW_POWER, PRIORITY_NO_POWER are the other priority modes
@@ -66,10 +62,11 @@ public class LocationMonitoringService extends Service implements
 
         mLocationClient.connect();
 
-        //todo: einkommentieren wenn nicht alleine unterwegs
-//        //make it a forground service so it will update the location even when app in background
-//        Notification notification = new Notification();
-//        startForeground(NOTIFICATION, notification);
+        //todo: kann man das auslagern und starten und stoppen?
+        //make it a forground service so it will update the location even when app in background
+        Notification notification = new Notification();
+        startForeground(NOTIFICATION, notification);
+
         //Make it stick to the notification panel so it is less prone to get cancelled by the Operating System.
         return START_STICKY;
     }
@@ -125,7 +122,6 @@ public class LocationMonitoringService extends Service implements
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
-
 
     private int getTrackId(){
         SharedPreferences sharedPref = getSharedPreferences(SHARED_PREF_TRACK_ID, MODE_PRIVATE);

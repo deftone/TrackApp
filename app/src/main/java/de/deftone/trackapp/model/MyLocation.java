@@ -23,7 +23,7 @@ public class MyLocation implements Serializable{
         this.trackId = trackId;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.speed = speed*3600/1000;
+        this.speed = speed;
         this.altitude = altitude;
     }
 
@@ -45,6 +45,10 @@ public class MyLocation implements Serializable{
 
     public float getSpeed() {
         return speed;
+    }
+
+    public float getSpeed_km_h() {
+        return speed*3600/1000;
     }
 
     public double getAltitude() {
