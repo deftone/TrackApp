@@ -8,6 +8,8 @@ import java.io.Serializable;
 @Entity
 public class MyLocation implements Serializable {
 
+    //todo: distance rausnehmen!
+
     @PrimaryKey
     private long timestamp;
     private int trackId;

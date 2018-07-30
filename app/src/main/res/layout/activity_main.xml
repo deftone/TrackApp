@@ -35,20 +35,52 @@
             android:background="@color/colorAccent"
             android:text="@string/show_all_routes" />
 
-        <Button
-            android:id="@+id/button_delete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@color/colorAccent"
-            android:text="@string/delete_all_routes" />
-
+        <!--<Button-->
+            <!--android:id="@+id/button_delete"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="5dp"-->
+            <!--android:background="@color/colorAccent"-->
+            <!--android:text="@string/delete_all_routes" />-->
 
         <TextView
             android:id="@+id/msgView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/durationView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10h:23min"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+
+        <TextView
+            android:id="@+id/speedView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3.56 km/h"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/distanceView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2.45 km"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/altitudeView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="569 m"
             android:textColor="#000"
             android:textSize="20sp" />
 

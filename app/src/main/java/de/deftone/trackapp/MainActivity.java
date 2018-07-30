@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
@@ -29,6 +30,7 @@ import de.deftone.trackapp.services.DatabaseGetRouteService;
 import de.deftone.trackapp.services.DatabaseSaveRouteService;
 import de.deftone.trackapp.services.LocationMonitoringService;
 import de.deftone.trackapp.utils.CheckLocationServiceRequirements;
+import de.deftone.trackapp.utils.TrackingUtils;
 
 import static de.deftone.trackapp.settings.Constants.ACTION_LOCATION_BROADCAST;
 import static de.deftone.trackapp.settings.Constants.EXTRA_LOCATION;
@@ -41,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean locatingServiceStarted = false;
     private boolean trackingActive = false;
-    private List<MyLocation> allLocations = new ArrayList<>();
+    private List<MyLocation> myLocationList = new ArrayList<>();
+    private List<Location> locationList = new ArrayList<>();
     private Context context = this;
     private Intent locationServiceIntent;
     @BindView(R.id.button_start)
@@ -50,6 +53,14 @@ public class MainActivity extends AppCompatActivity {
     Button buttonSave;
     @BindView(R.id.msgView)
     TextView messageTextView;
+    @BindView(R.id.distanceView)
+    TextView distanceView;
+    @BindView(R.id.speedView)
+    TextView speedView;
+    @BindView(R.id.altitudeView)
+    TextView altitudeView;
+    @BindView(R.id.durationView)
+    TextView durationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +77,17 @@ public class MainActivity extends AppCompatActivity {
                         if (trackingActive) {
                             MyLocation myLocation = (MyLocation) intent.getSerializableExtra(EXTRA_LOCATION);
                             if (myLocation != null) {
-                                allLocations.add(myLocation);
-                                showLocationsInTextView(allLocations);
+                                myLocationList.add(myLocation);
+//                                showLocationsInTextView(myLocationList);
+                                //also "real" Location for distance
+                                Location location = new Location("own location");
+                                location.setLatitude(myLocation.getLatitude());
+                                location.setLongitude(myLocation.getLongitude());
+                                locationList.add(new Location(location));
+                                //update info text views
+                                updateInfoBoxes();
                             }
                         }
-
                     }
                 }, new IntentFilter(ACTION_LOCATION_BROADCAST)
         );
@@ -120,6 +137,10 @@ public class MainActivity extends AppCompatActivity {
     private void updateLayout(int startVisibility, int saveVisibility) {
         buttonStart.setVisibility(startVisibility);
         buttonSave.setVisibility(saveVisibility);
+        durationView.setVisibility(saveVisibility);
+        speedView.setVisibility(saveVisibility);
+        distanceView.setVisibility(saveVisibility);
+        altitudeView.setVisibility(saveVisibility);
     }
 
     private void showLocationsInTextView(List<MyLocation> allLocations) {
@@ -142,6 +163,14 @@ public class MainActivity extends AppCompatActivity {
                     .append(System.lineSeparator()).append(System.lineSeparator());
         }
         messageTextView.setText(locationString.toString());
+    }
+
+    private void updateInfoBoxes() {
+        messageTextView.setText("TrackId: " + getTrackId());
+        durationView.setText("Duration:" + TrackingUtils.getDuration(myLocationList));
+        speedView.setText("Average speed: " + TrackingUtils.getAverageSpeedInMotion(myLocationList));
+        distanceView.setText("Distance: " + TrackingUtils.getDistanceInKm(locationList));
+        altitudeView.setText("Current altitude:" + TrackingUtils.getLastAltitude(myLocationList));
     }
 
     private void startLocationMonitorService() {
@@ -168,7 +197,8 @@ public class MainActivity extends AppCompatActivity {
         //get and set track id
         setTrackId(getTrackId() + 1);
         //reset location list
-        allLocations.clear();
+        myLocationList.clear();
+        locationList.clear();
         //update layout
         messageTextView.setText(R.string.msg_location_service_started);
         updateLayout(View.GONE, View.VISIBLE);
@@ -179,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
         trackingActive = false;
         //add location to database
         DatabaseSaveRouteService databaseSaveRouteService = new DatabaseSaveRouteService(this);
-        databaseSaveRouteService.execute(allLocations);
+        databaseSaveRouteService.execute(myLocationList);
         //update layout
         updateLayout(View.VISIBLE, View.GONE);
         messageTextView.setText(R.string.route_saved);

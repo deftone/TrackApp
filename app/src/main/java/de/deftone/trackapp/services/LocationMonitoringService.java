@@ -95,19 +95,19 @@ public class LocationMonitoringService extends Service implements
 
                     Location newLocation = locationResult.getLastLocation();
                     if (newLocation != null) {
-                        locationList.add(newLocation);
-
-                        float distance = (locationList.size() > 1) ?
-                                newLocation.distanceTo(locationList.get(locationList.size() - 2))
-                                : 0;
+                    //    locationList.add(newLocation);
+                        //todo: distance rausnehmen!
+//                        //das hier klappt nicht, wahrscheinlich rausnehmen
+//                        float distance = (locationList.size() > 1) ?
+//                                newLocation.distanceTo(locationList.get(locationList.size() - 2))
+//                                : 0;
 
                         MyLocation myLocation = new MyLocation(System.currentTimeMillis(), getTrackId(),
                                 newLocation.getLatitude(), newLocation.getLongitude(),
                                 newLocation.getAltitude(), newLocation.getSpeed(),
                                 newLocation.getAccuracy(), newLocation.getVerticalAccuracyMeters(),
                                 newLocation.getSpeedAccuracyMetersPerSecond(),
-                                distance);
-
+                                0);
 
                         //Send result to activities
                         //hier kann auch die liste uebergeben werden...

@@ -7,9 +7,9 @@ import de.deftone.trackapp.services.LocationMonitoringService;
 public interface Constants {
 
     //set the interval in which you want to get locations
-    public static final int LOCATION_INTERVAL = 5000;//120000;  //every two minutes
+    public static final int LOCATION_INTERVAL = 10000;//120000;  //every two minutes
     //if a location is available sooner you can get it (i.e. another app is using the location services).
-    public static final int FASTEST_LOCATION_INTERVAL = 5000;//60000;  //every minute
+    public static final int FASTEST_LOCATION_INTERVAL = 10000;//60000;  //every minute
     //how many meters diference to get a new location
     public static final float LOCATION_DISTANCE_INTERVAL = 10.0f; // every 10 meters
 

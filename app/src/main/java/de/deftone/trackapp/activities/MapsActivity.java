@@ -19,6 +19,7 @@ import java.util.List;
 
 import de.deftone.trackapp.R;
 import de.deftone.trackapp.model.MyLocation;
+import de.deftone.trackapp.utils.TrackingUtils;
 
 import static de.deftone.trackapp.settings.Constants.EXTRA_LOCATION_LIST;
 
@@ -42,12 +43,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
 
-        System.out.println("speed: " + getAverageSpeed());
+        System.out.println("speed: " + TrackingUtils.getAverageSpeedInMotion(myLocations));
 
-        System.out.println("duration: " + getDuration());
+        System.out.println("duration: " + TrackingUtils.getDuration(myLocations));
 
-        List<Double> altitudes = getAltitudes();
-        System.out.println();
+        System.out.println("last altitude: " + TrackingUtils.getLastAltitude(myLocations));
+
+//        List<Double> altitudes = TrackingUtils.getAltitudesInM(myLocations);
     }
 
 
@@ -78,11 +80,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Location location = new Location("own location");
             location.setLatitude(myLocation.getLatitude());
             location.setLongitude(myLocation.getLongitude());
+//            location.setSpeed(myLocation.getSpeed());
+            location.setAccuracy(myLocation.getAccuracy());
             locations.add(new Location(location));
         }
 
         //now calculate distance:
-        System.out.println("distance mit between: " + getDistance(locations));
+        System.out.println("distance mit between: " + TrackingUtils.getDistanceInKm(locations));
 
         //add marker to last point
         int lastPoint = myLocations.size() - 1;
@@ -91,67 +95,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //only one marker can show info window, except you do this:
         //https://stackoverflow.com/questions/23407059/how-to-open-a-infowindow-on-every-marker-multiple-marker-in-android
         //        markerFinal.showInfoWindow();
-    }
-
-
-    private float getAverageSpeed() {
-        Float speedSum = 0F;
-        int count = 0;
-        for (MyLocation location : myLocations) {
-            if (location.getSpeed() > 0 && location.getSpeedAccuracy_km_h() < 0.1) {
-                speedSum += location.getSpeed_km_h();
-                count++;
-            }
-        }
-        System.out.println("speed>0: " + count);
-        System.out.println("speed=0: " + (myLocations.size() - count));
-        return speedSum / count;
-    }
-
-    private String getDuration() {
-        int last = myLocations.size() - 1;
-        long diffMillisec = myLocations.get(last).getTimestamp() -
-                myLocations.get(0).getTimestamp();
-        long minutes = diffMillisec / 1000 / 60;
-        if (minutes < 60) {
-            return "0h:" + minutes + "min";
-        } else
-            return minutes / 60 + "h:" + minutes % 60 + "min";
-    }
-
-//    //hier kommt totaler quatsch raus!
-//    private float getDistance() {
-//        float length = 0;
-//        for (MyLocation location : myLocations) {
-//            if (location.getVerticalAccuracy() < 10) {
-//                length += location.getDistance();
-//            }
-//        }
-//        return length;
-//    }
-
-    //das hier scheint richtig zu sein
-    private float getDistance(List<Location> locations) {
-        float distance = 0;
-        float[] result = {0};
-        for (int i = 0; i < locations.size() - 1; i++) {
-            Location.distanceBetween(locations.get(i).getLatitude(),
-                    locations.get(i).getLongitude(),
-                    locations.get(i + 1).getLatitude(),
-                    locations.get(i + 1).getLongitude(),
-                    result);
-            distance += result[0];
-        }
-        return distance;
-    }
-
-    private List<Double> getAltitudes() {
-        List<Double> altitudeList = new ArrayList<>();
-        for (MyLocation location : myLocations) {
-            if (location.getVerticalAccuracy() <= 10)
-                altitudeList.add(location.getAltitude());
-        }
-        return altitudeList;
     }
 
 }
