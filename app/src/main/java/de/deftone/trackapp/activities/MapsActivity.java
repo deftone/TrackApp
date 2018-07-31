@@ -1,9 +1,14 @@
 package de.deftone.trackapp.activities;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,13 +24,15 @@ import java.util.List;
 
 import de.deftone.trackapp.R;
 import de.deftone.trackapp.model.MyLocation;
+import de.deftone.trackapp.services.DatabaseDeleteRouteService;
 import de.deftone.trackapp.utils.TrackingUtils;
 
 import static de.deftone.trackapp.settings.Constants.EXTRA_LOCATION_LIST;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    ArrayList<MyLocation> myLocations;
+    private Context context = this;
+    private ArrayList<MyLocation> myLocations;
 
 
     @Override
@@ -52,6 +59,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        List<Double> altitudes = TrackingUtils.getAltitudesInM(myLocations);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_routes, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.delete_route:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+                builder.setTitle(R.string.delete_title)
+                        .setMessage(R.string.delete_message)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // continue with delete
+                                DatabaseDeleteRouteService databaseDeleteRouteService = new DatabaseDeleteRouteService(context);
+                                databaseDeleteRouteService.execute(myLocations);
+                                //todo: now open refreshed list...
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     /**
      * Manipulates the map once available.

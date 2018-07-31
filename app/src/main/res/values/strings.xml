@@ -12,7 +12,7 @@
     <string name="start_tracking_new_route">Start tracking new route</string>
     <string name="save_new_route">Save new route</string>
     <string name="delete_title">Delete all Routes?</string>
-    <string name="delete_message">Do you really want to delete all routes? Can\'t be reversed!</string>
+    <string name="delete_message">Do you really want to delete this route? Can\'t be undone!</string>
     <string name="route_saved">Route saved</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_routes">All Routes</string>

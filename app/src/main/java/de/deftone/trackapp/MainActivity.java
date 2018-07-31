@@ -221,27 +221,6 @@ public class MainActivity extends AppCompatActivity {
         databaseGetTrackIdsService.execute();
     }
 
-    //todo katrin! und das hier dann wenn man die route ansieht
-//    @OnClick(R.id.button_delete)
-//    void deleteAllRoutes() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-//        builder.setTitle(R.string.delete_title)
-//                .setMessage(R.string.delete_message)
-//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        // continue with delete
-//                        DatabaseDeleteRouteService databaseDeleteRouteService = new DatabaseDeleteRouteService(context);
-//                        //todo: hier muss natuerlich eine List mit MyLocations uebergeben werden! sonst geht das nicth!!
-//                        databaseDeleteRouteService.execute();
-//                        messageTextView.setText("");
-//                    }
-//                })
-//                .setNegativeButton(android.R.string.no, null)
-//                .setIcon(android.R.drawable.ic_dialog_alert)
-//                .show();
-//    }
-
-
     private int getTrackId() {
         SharedPreferences sharedPref = getSharedPreferences(SHARED_PREF_TRACK_ID, MODE_PRIVATE);
         return sharedPref.getInt(SHARED_PREF_TRACK_ID_KEY, 0);
