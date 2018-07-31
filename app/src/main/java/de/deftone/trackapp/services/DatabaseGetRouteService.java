@@ -14,7 +14,6 @@ import static de.deftone.trackapp.settings.Constants.EXTRA_LOCATION_LIST;
 
 public class DatabaseGetRouteService extends AsyncTask {
 
-    //todo manu: was bedeutet das?
     private Context context;
 
     public DatabaseGetRouteService(Context context) {
@@ -23,17 +22,11 @@ public class DatabaseGetRouteService extends AsyncTask {
 
     @Override
     protected Object doInBackground(Object[] objects) {
-        if (objects.length == 0) {
-            return MyLocationDB
-                    .getInstance(context)
-                    .getLocationRepo()
-                    .getAllLocations();
-        } else {
-            return MyLocationDB
-                    .getInstance(context)
-                    .getLocationRepo()
-                    .getAllLocations((int) objects[0]);
-        }
+
+        return MyLocationDB
+                .getInstance(context)
+                .getLocationRepo()
+                .getAllLocations((int) objects[0]);
     }
 
     @Override

@@ -26,7 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.deftone.trackapp.model.MyLocation;
-import de.deftone.trackapp.services.DatabaseGetRouteService;
+import de.deftone.trackapp.services.DatabaseGetTrackIdsService;
 import de.deftone.trackapp.services.DatabaseSaveRouteService;
 import de.deftone.trackapp.services.LocationMonitoringService;
 import de.deftone.trackapp.utils.CheckLocationServiceRequirements;
@@ -217,11 +217,8 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.button_show)
     void showAllRoutes() {
-        DatabaseGetRouteService databaseGetRouteService = new DatabaseGetRouteService(this);
-//        //todo: auswaehlbar machen!
-        int trackId = 2;
-        databaseGetRouteService.execute(trackId);
-//        databaseGetRouteService.execute();
+        DatabaseGetTrackIdsService databaseGetTrackIdsService = new DatabaseGetTrackIdsService(this);
+        databaseGetTrackIdsService.execute();
     }
 
     //todo katrin! und das hier dann wenn man die route ansieht
