@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,6 +23,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.deftone.trackapp.R;
 import de.deftone.trackapp.model.MyLocation;
 import de.deftone.trackapp.services.DatabaseDeleteRouteService;
@@ -33,12 +36,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private Context context = this;
     private ArrayList<MyLocation> myLocations;
-
+    @BindView(R.id.distanceView)
+    TextView distanceView;
+    @BindView(R.id.speedView)
+    TextView speedView;
+    @BindView(R.id.altitudeView)
+    TextView altitudeView;
+    @BindView(R.id.durationView)
+    TextView durationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        ButterKnife.bind(this);
 
         //get locations
         Intent intent = getIntent();
@@ -133,6 +144,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //only one marker can show info window, except you do this:
         //https://stackoverflow.com/questions/23407059/how-to-open-a-infowindow-on-every-marker-multiple-marker-in-android
         //        markerFinal.showInfoWindow();
+
+        //update textviews:
+        durationView.setText("Duration:" + TrackingUtils.getDuration(myLocations));
+        speedView.setText("Average speed: " + TrackingUtils.getAverageSpeedInMotion(myLocations));
+        distanceView.setText("Distance: " + TrackingUtils.getDistanceInKm(locations));
+        altitudeView.setText("Last altitude:" + TrackingUtils.getLastAltitude(myLocations));
     }
 
 }
