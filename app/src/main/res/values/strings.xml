@@ -16,5 +16,6 @@
     <string name="route_saved">Route saved</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_routes">All Routes</string>
+    <string name="show_route_list">Show route list</string>
 
 </resources>

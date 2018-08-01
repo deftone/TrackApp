@@ -11,16 +11,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,10 +33,13 @@ import de.deftone.trackapp.utils.TrackingUtils;
 
 import static de.deftone.trackapp.settings.Constants.ACTION_LOCATION_BROADCAST;
 import static de.deftone.trackapp.settings.Constants.EXTRA_LOCATION;
-import static de.deftone.trackapp.settings.Constants.FORMATTER;
 import static de.deftone.trackapp.settings.Constants.REQUEST_PERMISSIONS_REQUEST_CODE;
 import static de.deftone.trackapp.settings.Constants.SHARED_PREF_TRACK_ID;
 import static de.deftone.trackapp.settings.Constants.SHARED_PREF_TRACK_ID_KEY;
+
+//todo: 1) abourt button, 2) pause tracking button
+//todo: 3) besseres layout der aktuellen anzeige und lat/long mit accuracy, current speed, diff altitude hinzufuegen
+//todo: 4) save automatically after 100 points - bei abort muss dann aber das auch geloescht werden!
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,20 +47,24 @@ public class MainActivity extends AppCompatActivity {
     private boolean trackingActive = false;
     private List<MyLocation> myLocationList = new ArrayList<>();
     private List<Location> locationList = new ArrayList<>();
-    private Context context = this;
-    private Intent locationServiceIntent;
     @BindView(R.id.button_start)
     Button buttonStart;
     @BindView(R.id.button_save)
     Button buttonSave;
-    @BindView(R.id.msgView)
-    TextView messageTextView;
+    @BindView(R.id.trackIdView)
+    TextView trackIdView;
+    @BindView(R.id.accuracyView)
+    TextView accuracyView;
     @BindView(R.id.distanceView)
     TextView distanceView;
     @BindView(R.id.speedView)
     TextView speedView;
+    @BindView(R.id.speedAvgView)
+    TextView speedAvgView;
     @BindView(R.id.altitudeView)
     TextView altitudeView;
+    @BindView(R.id.altitudeDiffView)
+    TextView altitudeDiffView;
     @BindView(R.id.durationView)
     TextView durationView;
 
@@ -134,6 +140,25 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.show_routes_list:
+                DatabaseGetTrackIdsService databaseGetTrackIdsService = new DatabaseGetTrackIdsService(this);
+                databaseGetTrackIdsService.execute();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void updateLayout(int startVisibility, int saveVisibility) {
         buttonStart.setVisibility(startVisibility);
         buttonSave.setVisibility(saveVisibility);
@@ -143,34 +168,15 @@ public class MainActivity extends AppCompatActivity {
         altitudeView.setVisibility(saveVisibility);
     }
 
-    private void showLocationsInTextView(List<MyLocation> allLocations) {
-        //now update textview
-        StringBuilder locationString = new StringBuilder();
-        for (MyLocation location : allLocations) {
-            LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(location.getTimestamp()),
-                    TimeZone.getDefault().toZoneId());
-            locationString.append(location.getTrackId()).append(", ")
-                    .append(dateTime.format(FORMATTER))
-                    .append("Altitude: ")
-                    .append(location.getAltitude()).append("m, +/- ")
-                    .append(location.getVerticalAccuracy()).append("m").append(System.lineSeparator())
-                    .append("Speed: ")
-                    .append(location.getSpeed_km_h()).append("km/h, +/- ")
-                    .append(location.getSpeedAccuracy_km_h()).append("km/h").append(System.lineSeparator())
-                    .append("Distance: ")
-                    .append(location.getDistance()).append("m, ")
-                    .append("Accuracy: ").append(location.getAccuracy()).append("")
-                    .append(System.lineSeparator()).append(System.lineSeparator());
-        }
-        messageTextView.setText(locationString.toString());
-    }
-
     private void updateInfoBoxes() {
-        messageTextView.setText("TrackId: " + getTrackId());
-        durationView.setText("Duration:" + TrackingUtils.getDuration(myLocationList));
-        speedView.setText("Average speed: " + TrackingUtils.getAverageSpeedInMotion(myLocationList));
-        distanceView.setText("Distance: " + TrackingUtils.getDistanceInKm(locationList));
-        altitudeView.setText("Current altitude:" + TrackingUtils.getLastAltitude(myLocationList));
+        trackIdView.setText(String.valueOf(getTrackId()));
+        accuracyView.setText(TrackingUtils.getAccuracy(myLocationList));
+        durationView.setText(TrackingUtils.getDuration(myLocationList));
+        distanceView.setText(TrackingUtils.getDistanceInKm(locationList));
+        speedView.setText(TrackingUtils.getCurrentSpeed(myLocationList));
+        speedAvgView.setText(TrackingUtils.getAverageSpeedInMotion(myLocationList));
+        altitudeView.setText(TrackingUtils.getLastAltitude(myLocationList));
+        altitudeDiffView.setText("");
     }
 
     private void startLocationMonitorService() {
@@ -178,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
         //no -> that does not work: it will be stopped when saving the route
         if (!locatingServiceStarted) {
             //Start location sharing service to app server.........
-            locationServiceIntent = new Intent(this, LocationMonitoringService.class);
+            Intent locationServiceIntent = new Intent(this, LocationMonitoringService.class);
             startService(locationServiceIntent);
             locatingServiceStarted = true;
         }
@@ -200,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
         myLocationList.clear();
         locationList.clear();
         //update layout
-        messageTextView.setText(R.string.msg_location_service_started);
+        Toast.makeText(this, R.string.msg_location_service_started, Toast.LENGTH_LONG).show();
         updateLayout(View.GONE, View.VISIBLE);
     }
 
@@ -212,13 +218,7 @@ public class MainActivity extends AppCompatActivity {
         databaseSaveRouteService.execute(myLocationList);
         //update layout
         updateLayout(View.VISIBLE, View.GONE);
-        messageTextView.setText(R.string.route_saved);
-    }
-
-    @OnClick(R.id.button_show)
-    void showAllRoutes() {
-        DatabaseGetTrackIdsService databaseGetTrackIdsService = new DatabaseGetTrackIdsService(this);
-        databaseGetTrackIdsService.execute();
+        Toast.makeText(this, R.string.route_saved, Toast.LENGTH_LONG).show();
     }
 
     private int getTrackId() {

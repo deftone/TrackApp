@@ -20,6 +20,9 @@ public interface MyLocationRepo {
     @Query("SELECT * FROM mylocation WHERE trackId=:id")
     List<MyLocation> getAllLocations(int id );
 
+    @Query("SELECT * FROM mylocation WHERE trackId BETWEEN :minId AND :maxId")
+    List<MyLocation> getAllLocations(int minId, int maxId);
+
     @Insert
     void insert(MyLocation myLocation);
 

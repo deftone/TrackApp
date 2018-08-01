@@ -18,6 +18,7 @@ import de.deftone.trackapp.utils.RecyclerViewAdapter;
 
 import static de.deftone.trackapp.settings.Constants.EXTRA_TRACK_SET;
 
+//todo: nicth nur trackId, sondern mehr info
 public class RoutesActivity extends AppCompatActivity {
 
     private Context context = this;
@@ -45,7 +46,14 @@ public class RoutesActivity extends AppCompatActivity {
             @Override
             public void onClick(int position) {
                 DatabaseGetRouteService databaseGetRouteService = new DatabaseGetRouteService(context);
-                databaseGetRouteService.execute(trackIds.get(position));
+
+                //todo: nur solange wie ahorn routen noch nicht neu abgespeichert!
+                if (position >= 8 && position <= 20) {
+                    databaseGetRouteService.execute(25, 39);
+                } else if (position == 21 || position == 22) {
+                    databaseGetRouteService.execute(40, 41);
+                } else
+                    databaseGetRouteService.execute(trackIds.get(position));
             }
         });
     }

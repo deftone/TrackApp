@@ -22,11 +22,18 @@ public class DatabaseGetRouteService extends AsyncTask {
 
     @Override
     protected Object doInBackground(Object[] objects) {
-
-        return MyLocationDB
-                .getInstance(context)
-                .getLocationRepo()
-                .getAllLocations((int) objects[0]);
+        //todo: nur temporaer!
+        if (objects.length == 2) {
+            return MyLocationDB
+                    .getInstance(context)
+                    .getLocationRepo()
+                    .getAllLocations((int) objects[0], (int) objects[1]);
+        }else {
+            return MyLocationDB
+                    .getInstance(context)
+                    .getLocationRepo()
+                    .getAllLocations((int) objects[0]);
+        }
     }
 
     @Override

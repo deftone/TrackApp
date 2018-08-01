@@ -24,7 +24,7 @@
         android:id="@+id/track_id_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical">
-    </android.support.v7.widget.RecyclerView>
+        android:paddingTop="?attr/actionBarSize"
+        android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
 
 </android.support.design.widget.CoordinatorLayout>

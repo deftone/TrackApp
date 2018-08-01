@@ -149,7 +149,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         durationView.setText("Duration:" + TrackingUtils.getDuration(myLocations));
         speedView.setText("Average speed: " + TrackingUtils.getAverageSpeedInMotion(myLocations));
         distanceView.setText("Distance: " + TrackingUtils.getDistanceInKm(locations));
-        altitudeView.setText("Last altitude:" + TrackingUtils.getLastAltitude(myLocations));
+        altitudeView.setText("Diff altitude:" + TrackingUtils.getDifferenceAltitude(myLocations));
     }
 
 }
