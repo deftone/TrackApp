@@ -26,12 +26,15 @@ public class TrackingUtils {
 
     public static String getCurrentSpeed(List<MyLocation> myLocations) {
         int lastItem = myLocations.size() - 1;
-        return String.format("(%.2f +/- %.2f) km/h", myLocations.get(lastItem).getSpeed_km_h(),
-                myLocations.get(lastItem).getSpeedAccuracy_km_h());
+        return String.format("%.2f km/h", myLocations.get(lastItem).getSpeed_km_h());
     }
 
     public static String getAccuracy(List<MyLocation> myLocations) {
-        return myLocations.get(myLocations.size() - 1).getAccuracy() + " m";
+        return String.format("%.0f m", myLocations.get(myLocations.size() - 1).getAccuracy());
+    }
+
+    public static String getVerticalAccuracy(List<MyLocation> myLocations) {
+        return String.format("%.0f m", myLocations.get(myLocations.size() - 1).getVerticalAccuracy());
     }
 
     public static String getDuration(List<MyLocation> myLocations) {
@@ -106,8 +109,7 @@ public class TrackingUtils {
 //        return altitude.equals("") ? "-" : altitude;
 
 //todo: use last value if current value is 0 !!
-        return String.format("(%.0f +/- %.0f) m", myLocations.get(myLocations.size() - 1).getAltitude(),
-                myLocations.get(myLocations.size() - 1).getVerticalAccuracy());
+        return String.format("%.0f m", myLocations.get(myLocations.size() - 1).getAltitude());
     }
 
     public static String getDifferenceAltitude(ArrayList<MyLocation> myLocations) {

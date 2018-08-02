@@ -46,12 +46,16 @@ public class RoutesActivity extends AppCompatActivity {
             @Override
             public void onClick(int position) {
                 DatabaseGetRouteService databaseGetRouteService = new DatabaseGetRouteService(context);
-
                 //todo: nur solange wie ahorn routen noch nicht neu abgespeichert!
                 if (position >= 8 && position <= 20) {
+                    //ahorn talstation bis edelhaus
                     databaseGetRouteService.execute(25, 39);
                 } else if (position == 21 || position == 22) {
+                    //edelhaus bis ahorn bergstation
                     databaseGetRouteService.execute(40, 41);
+                } else if (position >= 23 & position <= 26) {
+                    //bergstation bis isskogel gipfel
+                    databaseGetRouteService.execute(47, 50);
                 } else
                     databaseGetRouteService.execute(trackIds.get(position));
             }

@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,36 +38,53 @@ import static de.deftone.trackapp.settings.Constants.REQUEST_PERMISSIONS_REQUEST
 import static de.deftone.trackapp.settings.Constants.SHARED_PREF_TRACK_ID;
 import static de.deftone.trackapp.settings.Constants.SHARED_PREF_TRACK_ID_KEY;
 
-//todo: 1) abourt button, 2) pause tracking button
-//todo: 3) besseres layout der aktuellen anzeige und lat/long mit accuracy, current speed, diff altitude hinzufuegen
-//todo: 4) save automatically after 100 points - bei abort muss dann aber das auch geloescht werden!
+//todo: 1) abort button,
+//todo: 2) pause tracking button
+//todo: 3) diff altitude hinzufuegen
+//todo: 4) save automatically after 100 points (done) -> bei abort muss dann aber das auch geloescht werden!
 
 public class MainActivity extends AppCompatActivity {
 
     private boolean locatingServiceStarted = false;
     private boolean trackingActive = false;
-    private List<MyLocation> myLocationList = new ArrayList<>();
-    private List<Location> locationList = new ArrayList<>();
+    private static List<MyLocation> myLocationList = new ArrayList<>();
+    private static List<MyLocation> myLocationListSaving = new ArrayList<>();
+    private static List<Location> locationList = new ArrayList<>();
     @BindView(R.id.button_start)
     Button buttonStart;
+
     @BindView(R.id.button_save)
     Button buttonSave;
+
+    @BindView(R.id.gpd_table)
+    TableLayout gpsTable;
+
     @BindView(R.id.trackIdView)
     TextView trackIdView;
-    @BindView(R.id.accuracyView)
-    TextView accuracyView;
-    @BindView(R.id.distanceView)
-    TextView distanceView;
-    @BindView(R.id.speedView)
-    TextView speedView;
-    @BindView(R.id.speedAvgView)
-    TextView speedAvgView;
-    @BindView(R.id.altitudeView)
-    TextView altitudeView;
-    @BindView(R.id.altitudeDiffView)
-    TextView altitudeDiffView;
+
     @BindView(R.id.durationView)
     TextView durationView;
+
+    @BindView(R.id.distanceView)
+    TextView distanceView;
+
+    @BindView(R.id.speedView)
+    TextView speedView;
+
+    @BindView(R.id.speedAvgView)
+    TextView speedAvgView;
+
+    @BindView(R.id.altitudeView)
+    TextView altitudeView;
+
+    @BindView(R.id.altitudeDiffView)
+    TextView altitudeDiffView;
+
+    @BindView(R.id.accuracyHorizontalView)
+    TextView accuracyHorizontalView;
+
+    @BindView(R.id.accuracyVerticalView)
+    TextView accuracyVerticalView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                             MyLocation myLocation = (MyLocation) intent.getSerializableExtra(EXTRA_LOCATION);
                             if (myLocation != null) {
                                 myLocationList.add(myLocation);
-//                                showLocationsInTextView(myLocationList);
+                                myLocationListSaving.add(myLocation);
                                 //also "real" Location for distance
                                 Location location = new Location("own location");
                                 location.setLatitude(myLocation.getLatitude());
@@ -92,6 +110,17 @@ public class MainActivity extends AppCompatActivity {
                                 locationList.add(new Location(location));
                                 //update info text views
                                 updateInfoBoxes();
+
+                                //save every 100 points
+                                if (myLocationListSaving.size() == 100) {
+                                    System.out.println("automatic saving: myLoc size:" + myLocationList.size());
+                                    System.out.println("automatic saving: locat size:" + locationList.size());
+                                    System.out.println("automatic saving: myLoc Saving size:" + myLocationListSaving.size());
+                                    DatabaseSaveRouteService databaseSaveRouteService = new DatabaseSaveRouteService(context);
+                                    databaseSaveRouteService.execute(myLocationListSaving);
+                                    //now reset, but only after storing was successful!
+                                    //do this in on PostExecute, if this is done too early (i.e. now) all points might be lost!
+                                }
                             }
                         }
                     }
@@ -162,15 +191,13 @@ public class MainActivity extends AppCompatActivity {
     private void updateLayout(int startVisibility, int saveVisibility) {
         buttonStart.setVisibility(startVisibility);
         buttonSave.setVisibility(saveVisibility);
-        durationView.setVisibility(saveVisibility);
-        speedView.setVisibility(saveVisibility);
-        distanceView.setVisibility(saveVisibility);
-        altitudeView.setVisibility(saveVisibility);
+        gpsTable.setVisibility(saveVisibility);
     }
 
     private void updateInfoBoxes() {
         trackIdView.setText(String.valueOf(getTrackId()));
-        accuracyView.setText(TrackingUtils.getAccuracy(myLocationList));
+        accuracyHorizontalView.setText(TrackingUtils.getAccuracy(myLocationList));
+        accuracyVerticalView.setText(TrackingUtils.getVerticalAccuracy(myLocationList));
         durationView.setText(TrackingUtils.getDuration(myLocationList));
         distanceView.setText(TrackingUtils.getDistanceInKm(locationList));
         speedView.setText(TrackingUtils.getCurrentSpeed(myLocationList));
@@ -202,8 +229,9 @@ public class MainActivity extends AppCompatActivity {
         trackingActive = true;
         //get and set track id
         setTrackId(getTrackId() + 1);
-        //reset location list
+        //reset location lists
         myLocationList.clear();
+        myLocationListSaving.clear();
         locationList.clear();
         //update layout
         Toast.makeText(this, R.string.msg_location_service_started, Toast.LENGTH_LONG).show();
@@ -215,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
         trackingActive = false;
         //add location to database
         DatabaseSaveRouteService databaseSaveRouteService = new DatabaseSaveRouteService(this);
-        databaseSaveRouteService.execute(myLocationList);
+        databaseSaveRouteService.execute(myLocationListSaving);
         //update layout
         updateLayout(View.VISIBLE, View.GONE);
         Toast.makeText(this, R.string.route_saved, Toast.LENGTH_LONG).show();
@@ -230,5 +258,9 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences(SHARED_PREF_TRACK_ID, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(SHARED_PREF_TRACK_ID_KEY, id).apply();
+    }
+
+    public static void clearSavingList() {
+        myLocationListSaving.clear();
     }
 }
