@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -84,33 +85,61 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         int id = item.getItemId();
         switch (id) {
             case R.id.delete_route:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-                builder.setTitle(R.string.delete_title)
-                        .setMessage(R.string.delete_message)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // continue with delete
-                                DatabaseDeleteRouteService databaseDeleteRouteService = new DatabaseDeleteRouteService(context);
-                                databaseDeleteRouteService.execute(myLocations);
-                                //todo: now open refreshed list...
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                deleteRoute();
                 return true;
 
             case R.id.save_route_name:
-                SharedPreferences pref = getApplicationContext().getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-                SharedPreferences.Editor editor = pref.edit();
-                //todo: dialog zur abfragen und pruefen ob ueberschrieben werden soll
-                editor.putString(String.valueOf(myLocations.get(0).getTrackId()), "new name");
-                editor.apply();
+                saveNewNameForRoute();
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void deleteRoute() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        builder.setTitle(R.string.delete_title)
+                .setMessage(R.string.delete_message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        DatabaseDeleteRouteService databaseDeleteRouteService = new DatabaseDeleteRouteService(context);
+                        databaseDeleteRouteService.execute(myLocations);
+                        //todo: now open refreshed list...
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    private void saveNewNameForRoute() {
+        final int trackId = myLocations.get(0).getTrackId();
+        final SharedPreferences pref = getApplicationContext().getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+        //get old route name:
+        String oldName = pref.getString(String.valueOf(trackId), "-");
+        String message = "";
+        if (!oldName.equals("-"))
+            message = "And overwrite existing name '" + oldName + "'?";
+
+        final EditText taskEditText = new EditText(this);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Save route #" + trackId)
+                .setMessage(message)
+                .setView(taskEditText)
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String newName = String.valueOf(taskEditText.getText());
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString(String.valueOf(trackId), newName);
+                        editor.apply();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+        dialog.show();
     }
 
     /**
