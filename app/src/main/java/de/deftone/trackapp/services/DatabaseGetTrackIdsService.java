@@ -5,20 +5,19 @@ import android.content.Intent;
 import android.os.AsyncTask;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 
 import de.deftone.trackapp.activities.RoutesActivity;
 import de.deftone.trackapp.database.MyLocationDB;
 import de.deftone.trackapp.model.MyLocation;
 
-import static de.deftone.trackapp.settings.Constants.EXTRA_TRACK_SET;
+import static de.deftone.trackapp.settings.Constants.EXTRA_TRACK_ID;
+import static de.deftone.trackapp.settings.Constants.EXTRA_TRACK_TIMESTAMP;
 
-public class DatabaseGetTrackIdsService  extends AsyncTask {
+public class DatabaseGetTrackIdsService extends AsyncTask {
 
-    //todo manu: was bedeutet das?
     private Context context;
 
-    public DatabaseGetTrackIdsService(Context context){
+    public DatabaseGetTrackIdsService(Context context) {
         this.context = context;
     }
 
@@ -34,22 +33,28 @@ public class DatabaseGetTrackIdsService  extends AsyncTask {
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
 
+        //todo: muss man das wirklich jedes mal machen?
+        //man koennte die ids auch in einem shared pref speichern?
+
         ArrayList<MyLocation> allLocations = (ArrayList<MyLocation>) o;
 
         //get all different routes:
-        LinkedHashSet<Integer> trackIdSet = new LinkedHashSet<>();
-        for (MyLocation location : allLocations){
-            trackIdSet.add(location.getTrackId());
+        //todo: store all this info in shared prefs??
+        ArrayList<Integer> trackIdList = new ArrayList<>();
+        ArrayList<Long> timestampList = new ArrayList<>();
+        int oldTrackId = 0;
+        for (MyLocation location : allLocations) {
+            if (location.getTrackId() != oldTrackId) {
+                trackIdList.add(location.getTrackId());
+                timestampList.add(location.getTimestamp());
+                oldTrackId = location.getTrackId();
+            }
         }
-
-        //convert set to ArrayList, so it can be used with .get(position) in the recycler view
-        ArrayList<Integer> trackIdList = new ArrayList<>(trackIdSet);
 
         //start new activity with all items
         Intent routesActivityIntent = new Intent(context, RoutesActivity.class);
-        routesActivityIntent.putExtra(EXTRA_TRACK_SET, trackIdList);
+        routesActivityIntent.putExtra(EXTRA_TRACK_ID, trackIdList);
+        routesActivityIntent.putExtra(EXTRA_TRACK_TIMESTAMP, timestampList);
         context.startActivity(routesActivityIntent);
-
-
     }
 }

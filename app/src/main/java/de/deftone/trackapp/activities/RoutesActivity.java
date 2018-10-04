@@ -16,7 +16,8 @@ import de.deftone.trackapp.R;
 import de.deftone.trackapp.services.DatabaseGetRouteService;
 import de.deftone.trackapp.utils.RecyclerViewAdapter;
 
-import static de.deftone.trackapp.settings.Constants.EXTRA_TRACK_SET;
+import static de.deftone.trackapp.settings.Constants.EXTRA_TRACK_ID;
+import static de.deftone.trackapp.settings.Constants.EXTRA_TRACK_TIMESTAMP;
 
 //todo: nicth nur trackId, sondern mehr info
 public class RoutesActivity extends AppCompatActivity {
@@ -35,9 +36,10 @@ public class RoutesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
-        final ArrayList<Integer> trackIds = (ArrayList<Integer>) intent.getSerializableExtra(EXTRA_TRACK_SET);
+        final ArrayList<Integer> trackIds = (ArrayList<Integer>) intent.getSerializableExtra(EXTRA_TRACK_ID);
+        final ArrayList<Long> trackTimestamps = (ArrayList<Long>) intent.getSerializableExtra(EXTRA_TRACK_TIMESTAMP);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(trackIds);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(trackIds, trackTimestamps);
         recyclerView.setAdapter(adapter);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(layoutManager);
@@ -46,18 +48,7 @@ public class RoutesActivity extends AppCompatActivity {
             @Override
             public void onClick(int position) {
                 DatabaseGetRouteService databaseGetRouteService = new DatabaseGetRouteService(context);
-                //todo: nur solange wie ahorn routen noch nicht neu abgespeichert!
-                if (position >= 8 && position <= 20) {
-                    //ahorn talstation bis edelhaus
-                    databaseGetRouteService.execute(25, 39);
-                } else if (position == 21 || position == 22) {
-                    //edelhaus bis ahorn bergstation
-                    databaseGetRouteService.execute(40, 41);
-                } else if (position >= 23 & position <= 26) {
-                    //bergstation bis isskogel gipfel
-                    databaseGetRouteService.execute(47, 50);
-                } else
-                    databaseGetRouteService.execute(trackIds.get(position));
+                databaseGetRouteService.execute(trackIds.get(position));
             }
         });
     }

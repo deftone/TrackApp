@@ -7,13 +7,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.TimeZone;
 
 import de.deftone.trackapp.R;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<Integer> trackIds;
+    private ArrayList<Long> timestamps;
     private Listener listener;
 
     public interface Listener {
@@ -24,8 +29,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.listener = listener;
     }
 
-    public RecyclerViewAdapter(ArrayList<Integer> trackIdList) {
+    public RecyclerViewAdapter(ArrayList<Integer> trackIdList,
+                               ArrayList<Long> timestampList) {
         this.trackIds = trackIdList;
+        this.timestamps = timestampList;
     }
 
     @Override
@@ -38,8 +45,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         CardView cardView = holder.cardView;
-        TextView textView = cardView.findViewById(R.id.text_view_track_id);
-        textView.setText(String.valueOf(trackIds.get(position)));
+        TextView textViewId = cardView.findViewById(R.id.text_view_track_id);
+        TextView textViewDate = cardView.findViewById(R.id.text_view_track_date);
+        TextView textViewName = cardView.findViewById(R.id.text_view_track_name);
+
+        textViewId.setText(String.valueOf(trackIds.get(position)));
+
+        LocalDateTime dateTime =
+                LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamps.get(position)),
+                        TimeZone.getDefault().toZoneId());
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yy");
+        textViewDate.setText(dateTime.format(dateTimeFormatter));
+        //todo: get name
+        textViewName.setText(String.valueOf(" - "));
+
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

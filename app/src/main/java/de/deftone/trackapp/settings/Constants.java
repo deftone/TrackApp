@@ -16,7 +16,10 @@ public interface Constants {
     public static final String ACTION_LOCATION_BROADCAST = LocationMonitoringService.class.getName() + "LocationBroadcast";
     public static final String EXTRA_LOCATION = "extra_location";
     public static final String EXTRA_LOCATION_LIST = "extra_location_list";
-    public static final String EXTRA_TRACK_SET = "extra_all_track_ids";
+    public static final String EXTRA_TRACK_ID = "extra_all_track_ids";
+    public static final String EXTRA_TRACK_TIMESTAMP = "extra_all_track_timestamps";
+    public static final String SHARED_PREF_NAME = "shared pref names";
+    public static final String SHARED_PREF_DATE = "shared pref dates";
 
 
     public static final int PERMISSIONS_REQUEST_LOCATION = 99;
