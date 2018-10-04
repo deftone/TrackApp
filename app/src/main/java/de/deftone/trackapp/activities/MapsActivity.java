@@ -3,6 +3,7 @@ package de.deftone.trackapp.activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -31,6 +32,7 @@ import de.deftone.trackapp.services.DatabaseDeleteRouteService;
 import de.deftone.trackapp.utils.TrackingUtils;
 
 import static de.deftone.trackapp.settings.Constants.EXTRA_LOCATION_LIST;
+import static de.deftone.trackapp.settings.Constants.SHARED_PREF_NAME;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -99,7 +101,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
 
             case R.id.save_route_name:
-                //todo!!
+                SharedPreferences pref = getApplicationContext().getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                //todo: dialog zur abfragen und pruefen ob ueberschrieben werden soll
+                editor.putString(String.valueOf(myLocations.get(0).getTrackId()), "new name");
+                editor.apply();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -10,15 +10,16 @@ import android.widget.TextView;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
 
 import de.deftone.trackapp.R;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-    private ArrayList<Integer> trackIds;
-    private ArrayList<Long> timestamps;
+    private List<Integer> trackIds;
+    private List<Long> timestamps;
+    private List<String> names;
     private Listener listener;
 
     public interface Listener {
@@ -29,10 +30,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.listener = listener;
     }
 
-    public RecyclerViewAdapter(ArrayList<Integer> trackIdList,
-                               ArrayList<Long> timestampList) {
+    public RecyclerViewAdapter(List<Integer> trackIdList,
+                               List<Long> timestampList,
+                               List<String> nameList) {
         this.trackIds = trackIdList;
         this.timestamps = timestampList;
+        this.names = nameList;
     }
 
     @Override
@@ -56,8 +59,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         TimeZone.getDefault().toZoneId());
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yy");
         textViewDate.setText(dateTime.format(dateTimeFormatter));
-        //todo: get name
-        textViewName.setText(String.valueOf(" - "));
+        textViewName.setText(names.get(position));
 
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
