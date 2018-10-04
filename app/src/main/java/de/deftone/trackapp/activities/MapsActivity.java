@@ -30,6 +30,7 @@ import butterknife.ButterKnife;
 import de.deftone.trackapp.R;
 import de.deftone.trackapp.model.MyLocation;
 import de.deftone.trackapp.services.DatabaseDeleteRouteService;
+import de.deftone.trackapp.services.DatabaseGetTrackIdsService;
 import de.deftone.trackapp.utils.TrackingUtils;
 
 import static de.deftone.trackapp.settings.Constants.EXTRA_LOCATION_LIST;
@@ -98,18 +99,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void deleteRoute() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);//, android.R.style.Theme_Material_Dialog_Alert);
         builder.setTitle(R.string.delete_title)
                 .setMessage(R.string.delete_message)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
                         DatabaseDeleteRouteService databaseDeleteRouteService = new DatabaseDeleteRouteService(context);
                         databaseDeleteRouteService.execute(myLocations);
-                        //todo: now open refreshed list...
+                        DatabaseGetTrackIdsService service = new DatabaseGetTrackIdsService(context);
+                        service.execute();
                     }
                 })
-                .setNegativeButton(android.R.string.no, null)
+                .setNegativeButton("Cancel", null)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
@@ -192,4 +194,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         altitudeView.setText("Diff altitude:" + TrackingUtils.getDifferenceAltitude(myLocations));
     }
 
+    @Override
+    public void onBackPressed() {
+        DatabaseGetTrackIdsService service = new DatabaseGetTrackIdsService(context);
+        service.execute();
+    }
 }
