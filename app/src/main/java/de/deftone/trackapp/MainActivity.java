@@ -195,13 +195,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateInfoBoxes() {
+        float distanceInKm = TrackingUtils.getDistanceInKm(locationList);
+        float durationInH = TrackingUtils.getDurationInH(myLocationList);
+
         trackIdView.setText(String.valueOf(getTrackId()));
         accuracyHorizontalView.setText(TrackingUtils.getAccuracy(myLocationList));
         accuracyVerticalView.setText(TrackingUtils.getVerticalAccuracy(myLocationList));
         durationView.setText(TrackingUtils.getDuration(myLocationList));
-        distanceView.setText(TrackingUtils.getDistanceInKm(locationList));
+        distanceView.setText(TrackingUtils.getDistanceInKm(distanceInKm));
         speedView.setText(TrackingUtils.getCurrentSpeed(myLocationList));
-        speedAvgView.setText(TrackingUtils.getAverageSpeedInMotion(myLocationList));
+        speedAvgView.setText(String.valueOf(distanceInKm / durationInH));
         altitudeView.setText(TrackingUtils.getLastAltitude(myLocationList));
         altitudeDiffView.setText("");
     }

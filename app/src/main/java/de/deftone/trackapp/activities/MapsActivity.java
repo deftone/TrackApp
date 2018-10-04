@@ -63,15 +63,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
-        System.out.println("speed: " + TrackingUtils.getAverageSpeedInMotion(myLocations));
-
-        System.out.println("duration: " + TrackingUtils.getDuration(myLocations));
-
-        System.out.println("last altitude: " + TrackingUtils.getLastAltitude(myLocations));
-
-//        List<Double> altitudes = TrackingUtils.getAltitudesInM(myLocations);
     }
 
     @Override
@@ -83,14 +74,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
+        int itemId = item.getItemId();
+        final int trackId = myLocations.get(0).getTrackId();
+        final SharedPreferences pref = getApplicationContext().getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+        //get route name
+        String routeName = pref.getString(String.valueOf(trackId), "-");
+
+        switch (itemId) {
             case R.id.delete_route:
-                deleteRoute();
+                deleteRoute(trackId, routeName);
                 return true;
 
             case R.id.save_route_name:
-                saveNewNameForRoute();
+                saveNewNameForRoute(pref, trackId, routeName);
                 return true;
 
             default:
@@ -98,9 +94,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void deleteRoute() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);//, android.R.style.Theme_Material_Dialog_Alert);
-        builder.setTitle(R.string.delete_title)
+    private void deleteRoute(int trackId, String routeName) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String title = "Delete route ";
+        if (routeName.equals("-"))
+            title += "#" + trackId;
+        else
+            title += "'" + routeName + "'";
+        builder.setTitle(title)
                 .setMessage(R.string.delete_message)
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -116,14 +117,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .show();
     }
 
-    private void saveNewNameForRoute() {
-        final int trackId = myLocations.get(0).getTrackId();
-        final SharedPreferences pref = getApplicationContext().getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-        //get old route name:
-        String oldName = pref.getString(String.valueOf(trackId), "-");
-        String message = "";
+    private void saveNewNameForRoute(final SharedPreferences pref, final int trackId, final String oldName) {
+
+        String message = "Enter name for this route:";
         if (!oldName.equals("-"))
-            message = "And overwrite existing name '" + oldName + "'?";
+            message = "(and overwrite existing name '" + oldName + "')";
 
         final EditText taskEditText = new EditText(this);
         AlertDialog dialog = new AlertDialog.Builder(this)
@@ -188,9 +186,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //        markerFinal.showInfoWindow();
 
         //update textviews:
+        float distanceInKm = TrackingUtils.getDistanceInKm(locations);
+        float durationInH = TrackingUtils.getDurationInH(myLocations);
+
         durationView.setText("Duration:" + TrackingUtils.getDuration(myLocations));
-        speedView.setText("Average speed: " + TrackingUtils.getAverageSpeedInMotion(myLocations));
-        distanceView.setText("Distance: " + TrackingUtils.getDistanceInKm(locations));
+        speedView.setText("Average speed: " + distanceInKm/durationInH);
+        distanceView.setText("Distance: " + TrackingUtils.getDistanceInKm(distanceInKm));
         altitudeView.setText("Diff altitude:" + TrackingUtils.getDifferenceAltitude(myLocations));
     }
 

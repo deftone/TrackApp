@@ -9,20 +9,21 @@ import de.deftone.trackapp.model.MyLocation;
 
 public class TrackingUtils {
 
-    public static String getAverageSpeedInMotion(List<MyLocation> myLocations) {
-        Float speedSum = 0F;
-        int count = 0;
-        for (MyLocation location : myLocations) {
-            if (location.getSpeed() > 0 && location.getSpeedAccuracy_km_h() < 0.1) {
-                speedSum += location.getSpeed_km_h();
-                count++;
-            }
-        }
-        System.out.println("speed>0: " + count);
-        System.out.println("speed=0: " + (myLocations.size() - count));
-
-        return (speedSum == 0) ? " - " : String.format("%.2f km/h", speedSum / count);
-    }
+//    public static String getAverageSpeedInMotion(List<MyLocation> myLocations) {
+//        //die app nimmt schrott auf :(
+//        Float speedSum = 0F;
+//        int count = 0;
+//        for (MyLocation location : myLocations) {
+//            if (location.getSpeed() > 0 && location.getSpeedAccuracy_km_h() < 0.1) {
+//                speedSum += location.getSpeed_km_h();
+//                count++;
+//            }
+//        }
+//        System.out.println("speed>0: " + count);
+//        System.out.println("speed=0: " + (myLocations.size() - count));
+//
+//        return (speedSum == 0) ? " - " : String.format("%.2f km/h", speedSum / count);
+//    }
 
     public static String getCurrentSpeed(List<MyLocation> myLocations) {
         int lastItem = myLocations.size() - 1;
@@ -49,15 +50,28 @@ public class TrackingUtils {
         }
     }
 
+    public static float getDurationInH(List<MyLocation> myLocations) {
+        int last = myLocations.size() - 1;
+        long diffMillisec = myLocations.get(last).getTimestamp() -
+                myLocations.get(0).getTimestamp();
+        return (float) diffMillisec / 1000 / 60 / 60;
+
+    }
+
     private static String preZero(long number) {
         return number < 10 ? "0" + number : "" + number;
     }
 
-    public static String getDistanceInKm(List<Location> locations) {
+    public static String getDistanceInKm(float distance) {
+        return String.format("%.3f km", distance);
+    }
+
+    public static float getDistanceInKm(List<Location> locations) {
         float distance = 0;
         float[] result = {0};
         //only if speed is > 0 for at least one of them?
         //only if accuracy is not too bad?
+        //no to both, comparison with others show, this is closer to the other gpses
         for (int i = 0; i < locations.size() - 1; i++) {
             Location.distanceBetween(locations.get(i).getLatitude(),
                     locations.get(i).getLongitude(),
@@ -67,23 +81,7 @@ public class TrackingUtils {
             distance += result[0];
         }
 
-        System.out.println("************* ohne bedingung: " + distance / 1000);
-
-
-        distance = 0;
-        for (int i = 0; i < locations.size() - 1; i++) {
-            if (locations.get(i).getAccuracy() < 25
-                    && locations.get(i + 1).getAccuracy() < 25) {
-                Location.distanceBetween(locations.get(i).getLatitude(),
-                        locations.get(i).getLongitude(),
-                        locations.get(i + 1).getLatitude(),
-                        locations.get(i + 1).getLongitude(),
-                        result);
-                distance += result[0];
-            }
-        }
-        System.out.println("************* mit accuracy 25 m: " + distance / 1000);
-        return String.format("%.3f km", distance / 1000);
+        return distance / 1000;
     }
 
     public static List<Double> getAllAltitudesInM(List<MyLocation> myLocations) {
