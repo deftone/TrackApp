@@ -22,6 +22,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +43,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private Context context = this;
     private ArrayList<MyLocation> myLocations;
+    private int trackId;
+    private String routeName;
+    private SharedPreferences pref;
     @BindView(R.id.distanceView)
     TextView distanceView;
     @BindView(R.id.speedView)
@@ -59,6 +65,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Intent intent = getIntent();
         myLocations = (ArrayList<MyLocation>) intent.getSerializableExtra(EXTRA_LOCATION_LIST);
 
+        // get route infos
+        trackId = myLocations.get(0).getTrackId();
+        pref = getApplicationContext().getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+        routeName = pref.getString(String.valueOf(trackId), "-");
+        LocalDateTime localDateTime = LocalDateTime.ofEpochSecond(myLocations.get(0).getTimestamp()/1000,
+                0, ZoneOffset.UTC);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        String date = formatter.format(localDateTime);
+        //adjust title of activity
+        setTitle(routeName + " (" + date + ")");
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -75,11 +92,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        final int trackId = myLocations.get(0).getTrackId();
-        final SharedPreferences pref = getApplicationContext().getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-        //get route name
-        String routeName = pref.getString(String.valueOf(trackId), "-");
-
         switch (itemId) {
             case R.id.delete_route:
                 deleteRoute(trackId, routeName);
