@@ -89,6 +89,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 saveNewNameForRoute(pref, trackId, routeName);
                 return true;
 
+            case R.id.show_profile:
+                Intent intent = new Intent(this, AltitudeActivity.class);
+                intent.putExtra(EXTRA_LOCATION_LIST, myLocations);
+                startActivity(intent);
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -175,7 +181,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         //now calculate distance:
-        System.out.println("distance mit between: " + TrackingUtils.getDistanceInKm(locations));
 
         //add marker to last point
         int lastPoint = myLocations.size() - 1;
@@ -186,11 +191,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //        markerFinal.showInfoWindow();
 
         //update textviews:
-        float distanceInKm = TrackingUtils.getDistanceInKm(locations);
+        float distanceInKm = TrackingUtils.getAndSetDistanceInKm(locations, myLocations);
         float durationInH = TrackingUtils.getDurationInH(myLocations);
 
         durationView.setText("Duration:" + TrackingUtils.getDuration(myLocations));
-        speedView.setText("Average speed: " + distanceInKm/durationInH);
+        speedView.setText("Average speed: " + distanceInKm / durationInH);
         distanceView.setText("Distance: " + TrackingUtils.getDistanceInKm(distanceInKm));
         altitudeView.setText("Diff altitude:" + TrackingUtils.getDifferenceAltitude(myLocations));
     }

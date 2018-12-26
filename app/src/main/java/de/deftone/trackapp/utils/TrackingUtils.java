@@ -80,7 +80,24 @@ public class TrackingUtils {
                     result);
             distance += result[0];
         }
+        return distance / 1000;
+    }
 
+    public static float getAndSetDistanceInKm(List<Location> locations, List<MyLocation> myLocations) {
+        float distance = 0;
+        float[] result = {0};
+        //only if speed is > 0 for at least one of them?
+        //only if accuracy is not too bad?
+        //no to both, comparison with others show, this is closer to the other gpses
+        for (int i = 0; i < locations.size() - 1; i++) {
+            Location.distanceBetween(locations.get(i).getLatitude(),
+                    locations.get(i).getLongitude(),
+                    locations.get(i + 1).getLatitude(),
+                    locations.get(i + 1).getLongitude(),
+                    result);
+            distance += result[0];
+            myLocations.get(i).setDistance(distance);
+        }
         return distance / 1000;
     }
 
