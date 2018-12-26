@@ -194,10 +194,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         float distanceInKm = TrackingUtils.getAndSetDistanceInKm(locations, myLocations);
         float durationInH = TrackingUtils.getDurationInH(myLocations);
 
-        durationView.setText("Duration:" + TrackingUtils.getDuration(myLocations));
-        speedView.setText("Average speed: " + distanceInKm / durationInH);
-        distanceView.setText("Distance: " + TrackingUtils.getDistanceInKm(distanceInKm));
-        altitudeView.setText("Diff altitude:" + TrackingUtils.getDifferenceAltitude(myLocations));
+        durationView.setText(TrackingUtils.getDuration(myLocations));
+        speedView.setText(String.format("%.2f km/h", distanceInKm / durationInH));
+        distanceView.setText(TrackingUtils.getDistanceInKm(distanceInKm));
+        altitudeView.setText(TrackingUtils.getDifferenceAltitude(myLocations));
     }
 
     @Override

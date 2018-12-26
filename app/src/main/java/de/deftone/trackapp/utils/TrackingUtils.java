@@ -63,7 +63,7 @@ public class TrackingUtils {
     }
 
     public static String getDistanceInKm(float distance) {
-        return String.format("%.3f km", distance);
+        return String.format("%.2f km", distance);
     }
 
     public static float getDistanceInKm(List<Location> locations) {

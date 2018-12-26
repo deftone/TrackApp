@@ -3,43 +3,104 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.RoutesActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".activities.RoutesActivity">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:paddingTop="5dp"
+            android:weightSum="1">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_weight=".2"
+                android:adjustViewBounds="true"
+                android:gravity="center"
+                android:paddingStart="10dp"
+                android:src="@drawable/time2" />
+
+            <TextView
+                android:id="@+id/durationView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:padding="10dp"
+                android:text=""
+                android:textColor="#000"
+                android:textSize="20sp" />
 
 
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_weight=".2"
+                android:adjustViewBounds="true"
+                android:gravity="center"
+                android:paddingStart="10dp"
+                android:src="@drawable/speed2" />
 
-    <TextView
-        android:id="@+id/durationView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="#000"
-        android:textSize="20sp" />
+            <TextView
+                android:id="@+id/speedView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:padding="10dp"
+                android:text=""
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+        </TableRow>
+
+        <TableRow
+            android:paddingTop="5dp"
+            android:weightSum="1">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_weight=".2"
+                android:adjustViewBounds="true"
+                android:gravity="center"
+                android:paddingStart="10dp"
+                android:src="@drawable/distance" />
 
 
-    <TextView
-        android:id="@+id/speedView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="#000"
-        android:textSize="20sp" />
+            <TextView
+                android:id="@+id/distanceView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:padding="10dp"
+                android:text=""
+                android:textColor="#000"
+                android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/distanceView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="#000"
-        android:textSize="20sp" />
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_weight=".2"
+                android:adjustViewBounds="true"
+                android:gravity="center"
+                android:paddingStart="10dp"
+                android:src="@drawable/altitude" />
 
-    <TextView
-        android:id="@+id/altitudeView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="#000"
-        android:textSize="20sp" />
+            <TextView
+                android:id="@+id/altitudeView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:padding="10dp"
+                android:text=""
+                android:textColor="#000"
+                android:textSize="20sp" />
+        </TableRow>
+
+    </TableLayout>
+
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"

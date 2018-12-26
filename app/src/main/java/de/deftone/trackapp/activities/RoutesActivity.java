@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -40,6 +41,11 @@ public class RoutesActivity extends AppCompatActivity {
         final List<Integer> trackIds = (ArrayList<Integer>) intent.getSerializableExtra(EXTRA_TRACK_ID);
         final List<Long> trackTimestamps = (ArrayList<Long>) intent.getSerializableExtra(EXTRA_TRACK_TIMESTAMP);
         final List<String> trackNames = (ArrayList<String>) intent.getSerializableExtra(EXTRA_TRACK_NAME);
+
+        //now revert the lists, to show latest first:
+        Collections.reverse(trackIds);
+        Collections.reverse(trackTimestamps);
+        Collections.reverse(trackNames);
 
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(trackIds, trackTimestamps, trackNames);
         recyclerView.setAdapter(adapter);
