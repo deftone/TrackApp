@@ -19,6 +19,8 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,11 +58,14 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.button_save)
     Button buttonSave;
 
-    @BindView(R.id.gpd_table)
+    @BindView(R.id.gps_table)
     TableLayout gpsTable;
 
     @BindView(R.id.trackIdView)
     TextView trackIdView;
+
+    @BindView(R.id.dateView)
+    TextView dateView;
 
     @BindView(R.id.durationView)
     TextView durationView;
@@ -199,12 +204,15 @@ public class MainActivity extends AppCompatActivity {
         float durationInH = TrackingUtils.getDurationInH(myLocationList);
 
         trackIdView.setText(String.valueOf(getTrackId()));
+        LocalDateTime dateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm:ss");
+        dateView.setText(formatter.format(dateTime));
         accuracyHorizontalView.setText(TrackingUtils.getAccuracy(myLocationList));
         accuracyVerticalView.setText(TrackingUtils.getVerticalAccuracy(myLocationList));
         durationView.setText(TrackingUtils.getDuration(myLocationList));
         distanceView.setText(TrackingUtils.getDistanceInKm(distanceInKm));
         speedView.setText(TrackingUtils.getCurrentSpeed(myLocationList));
-        speedAvgView.setText(String.valueOf(distanceInKm / durationInH));
+        speedAvgView.setText(String.format("%.2f km/h", distanceInKm / durationInH));
         altitudeView.setText(TrackingUtils.getLastAltitude(myLocationList));
         altitudeDiffView.setText("");
     }

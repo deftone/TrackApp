@@ -44,9 +44,9 @@ public class TrackingUtils {
                 myLocations.get(0).getTimestamp();
         long minutes = diffMillisec / 1000 / 60;
         if (minutes < 60) {
-            return "0h:" + preZero(minutes) + "min";
+            return  minutes + " min";
         } else {
-            return minutes / 60 + "h:" + preZero(minutes % 60) + "min";
+            return minutes / 60 + " h : " + preZero(minutes % 60) + " min";
         }
     }
 

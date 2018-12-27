@@ -26,199 +26,305 @@
             android:background="@color/colorAccent"
             android:text="@string/save_new_route" />
 
+
         <TableLayout
-            android:id="@+id/gpd_table"
+            android:id="@+id/gps_table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:weightSum="2">
 
-                <TextView
-                    style="@style/gps_title"
-                    android:text="Track ID" />
+            <!-- just draw a line -->
+            <View
+                android:layout_height="1dip"
+                android:background="@color/colorAccent" />
 
-                <TextView
-                    style="@style/gps_title"
-                    android:text="" />
+            <TableRow android:weightSum="1">
 
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:weightSum="2">
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight=".5"
+                    android:adjustViewBounds="true"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:src="@drawable/id" />
 
                 <TextView
                     android:id="@+id/trackIdView"
-                    style="@style/gps_content" />
-
-                <TextView
-                    style="@style/gps_content"
-                    android:text="" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:padding="10dp"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="20sp" />
 
             </TableRow>
-
 
             <!-- just draw a line -->
             <View
-                android:layout_height="2dip"
+                android:layout_height="1dip"
                 android:background="@color/colorAccent" />
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:weightSum="2">
+            <TableRow android:weightSum="1">
+
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight=".5"
+                    android:adjustViewBounds="true"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:src="@drawable/date" />
 
                 <TextView
-                    style="@style/gps_title"
-                    android:text="Duration" />
-
-                <TextView
-                    style="@style/gps_title"
-                    android:text="Distance" />
+                    android:id="@+id/dateView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:padding="10dp"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="20sp" />
 
             </TableRow>
 
+            <!-- just draw a line -->
+            <View
+                android:layout_height="1dip"
+                android:background="@color/colorAccent" />
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:weightSum="2">
+
+            <TableRow android:weightSum="1">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight=".5"
+                    android:adjustViewBounds="true"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:src="@drawable/time2" />
 
                 <TextView
                     android:id="@+id/durationView"
-                    style="@style/gps_content" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:padding="10dp"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <!-- just draw a line -->
+            <View
+                android:layout_height="1dip"
+                android:background="@color/colorAccent" />
+
+            <TableRow android:weightSum="1">
+
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight=".5"
+                    android:adjustViewBounds="true"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:src="@drawable/distance" />
 
                 <TextView
                     android:id="@+id/distanceView"
-                    style="@style/gps_content" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:padding="10dp"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="20sp" />
 
             </TableRow>
 
             <!-- just draw a line -->
             <View
-                android:layout_height="2dip"
+                android:layout_height="1dip"
                 android:background="@color/colorAccent" />
 
             <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:weightSum="2">
 
-                <TextView
-                    style="@style/gps_title"
-                    android:text="Current speed" />
+                android:weightSum="1">
 
-                <TextView
-                    style="@style/gps_title"
-                    android:text="Average speed" />
-            </TableRow>
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight=".5"
+                    android:adjustViewBounds="true"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:src="@drawable/speed" />
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:weightSum="2">
 
                 <TextView
                     android:id="@+id/speedView"
-                    style="@style/gps_content" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:padding="10dp"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="20sp" />
+
+            </TableRow>
+
+            <!-- just draw a line -->
+            <View
+                android:layout_height="1dip"
+                android:background="@color/colorAccent" />
+
+            <TableRow android:weightSum="1">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight=".5"
+                    android:adjustViewBounds="true"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:src="@drawable/average" />
 
                 <TextView
                     android:id="@+id/speedAvgView"
-                    style="@style/gps_content" />
-
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:padding="10dp"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="20sp" />
             </TableRow>
 
             <!-- just draw a line -->
             <View
-                android:layout_height="2dip"
+                android:layout_height="1dip"
                 android:background="@color/colorAccent" />
 
             <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:weightSum="2">
 
-                <TextView
-                    style="@style/gps_title"
-                    android:text="Current Altitude" />
+                android:weightSum="1">
 
-                <TextView
-                    style="@style/gps_title"
-                    android:text="Climbed Altitude" />
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight=".5"
+                    android:adjustViewBounds="true"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:src="@drawable/altitude2" />
 
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:weightSum="2">
 
                 <TextView
                     android:id="@+id/altitudeView"
-                    style="@style/gps_content" />
-
-                <TextView
-                    android:id="@+id/altitudeDiffView"
-                    style="@style/gps_content" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:padding="10dp"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="20sp" />
 
             </TableRow>
 
             <!-- just draw a line -->
             <View
-                android:layout_height="2dip"
+                android:layout_height="1dip"
+                android:background="@color/colorAccent" />
+
+            <TableRow android:weightSum="1">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight=".5"
+                    android:adjustViewBounds="true"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:src="@drawable/altitude" />
+
+                <TextView
+                    android:id="@+id/altitudeDiffView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:padding="10dp"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <!-- just draw a line -->
+            <View
+                android:layout_height="1dip"
                 android:background="@color/colorAccent" />
 
 
             <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:weightSum="2">
 
-                <TextView
-                    style="@style/gps_title"
-                    android:text="horizontal Accuracy" />
+                android:weightSum="1">
 
-                <TextView
-                    style="@style/gps_title"
-                    android:text="vertical Accuracy" />
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight=".5"
+                    android:adjustViewBounds="true"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:src="@drawable/horizontalacc" />
 
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:weightSum="2">
 
                 <TextView
                     android:id="@+id/accuracyHorizontalView"
-                    style="@style/gps_content" />
-
-                <TextView
-                    android:id="@+id/accuracyVerticalView"
-                    style="@style/gps_content" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:padding="10dp"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="20sp" />
 
             </TableRow>
 
             <!-- just draw a line -->
             <View
-                android:layout_height="2dip"
+                android:layout_height="1dip"
+                android:background="@color/colorAccent" />
+
+            <TableRow android:weightSum="1">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight=".5"
+                    android:adjustViewBounds="true"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:src="@drawable/verticalacc" />
+
+                <TextView
+                    android:id="@+id/accuracyVerticalView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:padding="10dp"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <!-- just draw a line -->
+            <View
+                android:layout_height="1dip"
                 android:background="@color/colorAccent" />
 
 
