@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -69,7 +71,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         trackId = myLocations.get(0).getTrackId();
         pref = getApplicationContext().getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
         routeName = pref.getString(String.valueOf(trackId), "-");
-        LocalDateTime localDateTime = LocalDateTime.ofEpochSecond(myLocations.get(0).getTimestamp()/1000,
+        LocalDateTime localDateTime = LocalDateTime.ofEpochSecond(myLocations.get(0).getTimestamp() / 1000,
                 0, ZoneOffset.UTC);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         String date = formatter.format(localDateTime);
@@ -173,7 +175,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //add marker with title to first point
         LatLng latLngFirst = new LatLng(myLocations.get(0).getLatitude(), myLocations.get(0).getLongitude());
-        Marker markerStart = googleMap.addMarker(new MarkerOptions().position(latLngFirst).title("Start"));
+        Marker markerStart = googleMap.addMarker(new MarkerOptions()
+                .position(latLngFirst)
+                .title("Start")
+                .icon(getMarkerIcon(getResources().getString(0 + R.color.colorAccent))));
         markerStart.showInfoWindow();
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngFirst, 13));
 
@@ -182,8 +187,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //put small icon for all points
         for (MyLocation myLocation : myLocations) {
             LatLng latLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-            googleMap.addMarker(new MarkerOptions().position(latLng))
-                    .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.point));
+            googleMap.addMarker(new MarkerOptions()
+                    .position(latLng))
+                    .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pointorange));
             Location location = new Location("own location");
             location.setLatitude(myLocation.getLatitude());
             location.setLongitude(myLocation.getLongitude());
@@ -197,7 +203,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //add marker to last point
         int lastPoint = myLocations.size() - 1;
         LatLng latLngFinal = new LatLng(myLocations.get(lastPoint).getLatitude(), myLocations.get(lastPoint).getLongitude());
-        Marker markerFinal = googleMap.addMarker(new MarkerOptions().position(latLngFinal).title("Finish"));
+        Marker markerFinal = googleMap.addMarker(new MarkerOptions()
+                .position(latLngFinal)
+                .title("Finish")
+                .icon(getMarkerIcon("#FF530D")));
         //only one marker can show info window, except you do this:
         //https://stackoverflow.com/questions/23407059/how-to-open-a-infowindow-on-every-marker-multiple-marker-in-android
         //        markerFinal.showInfoWindow();
@@ -216,5 +225,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onBackPressed() {
         DatabaseGetTrackIdsService service = new DatabaseGetTrackIdsService(context);
         service.execute();
+    }
+
+    // get color for map marker
+    private BitmapDescriptor getMarkerIcon(String color) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(Color.parseColor(color), hsv);
+        return BitmapDescriptorFactory.defaultMarker(hsv[0]);
     }
 }
