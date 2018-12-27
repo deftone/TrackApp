@@ -1,32 +1,29 @@
 package de.deftone.trackapp.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
+import android.support.v7.app.AppCompatActivity;
+
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.deftone.trackapp.R;
 import de.deftone.trackapp.model.MyLocation;
 
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GridLabelRenderer;
-import com.jjoe64.graphview.ValueDependentColor;
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
-import com.jjoe64.graphview.series.BarGraphSeries;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.DoubleUnaryOperator;
-
 import static de.deftone.trackapp.settings.Constants.EXTRA_LOCATION_LIST;
+import static de.deftone.trackapp.settings.Constants.SHARED_PREF_NAME;
 
 
 public class AltitudeActivity extends AppCompatActivity {
@@ -43,6 +40,17 @@ public class AltitudeActivity extends AppCompatActivity {
         //get locations
         Intent intent = getIntent();
         ArrayList<MyLocation> myLocations = (ArrayList<MyLocation>) intent.getSerializableExtra(EXTRA_LOCATION_LIST);
+
+        // get route infos for title
+        int trackId = myLocations.get(0).getTrackId();
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+        String routeName = pref.getString(String.valueOf(trackId), "-");
+        LocalDateTime localDateTime = LocalDateTime.ofEpochSecond(myLocations.get(0).getTimestamp() / 1000,
+                0, ZoneOffset.UTC);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        String date = formatter.format(localDateTime);
+        //adjust title of activity
+        setTitle(routeName + " (" + date + ")");
 
         createBarChartGraph(myLocations);
     }
@@ -69,6 +77,8 @@ public class AltitudeActivity extends AppCompatActivity {
         statisticGraph.addSeries(series);
         series.setDrawDataPoints(true);
         series.setDataPointsRadius(1);
+        //change line color
+        series.setColor(Color.parseColor(getResources().getString(0 + R.color.colorAccent)));
 
         // set date label formatter
 //        statisticGraph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));

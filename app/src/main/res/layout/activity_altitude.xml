@@ -16,8 +16,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:gravity="center"
+            android:layout_gravity="center"
             android:text="Altitude profile"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="22sp" />
 
         <com.jjoe64.graphview.GraphView
